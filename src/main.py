@@ -1,10 +1,10 @@
 import cv2
 import numpy as np 
 from detection.detector import YoloDetector
-from tracking.sort import Sort
+#from tracking.sort import Sort
 from boxmot import StrongSORT
 import torch
-
+from utils.visualization import draw_detections, draw_tracks
 
 def main(video_path, output_path=None):
 
@@ -83,29 +83,16 @@ def main(video_path, output_path=None):
         # drawing the results
         
 
-        for det in detections:
-
-            x1,y1,x2,y2, conf, cls = det
-
-
-            cv2.rectangle(frame, (x1,y1), (x2,y2), (255,0,0), 2)
-            cv2.putText(frame, f"{conf:.2f}", (x1,y1-5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,0,0),2)
-
-            # drawing tracked obects with id
-
-            for track in tracked_objects:
-                x1,y1,x2,y2, track_id = map(int,track[:5]) # just track for simple sort
-                cv2.rectangle(frame, (x1,y1),(x2,y2),(0,255,0),2)
-                cv2.putText(frame, f"ID:{track_id}", (x1, y2+20), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
+        draw_detections(frame, original_detections, color=(255,0,0), show_conf=True)
+        draw_tracks(frame, tracked_objects, color=(0,255,0), show_id=True)
+        if output_path:
+            out.write(frame)
+        else:
+            cv2.imshow('StrongSORT Tracking', frame)
+            if cv2.waitKey(1) & 0xFF ==ord("q"):
+                break
             
-            if output_path:
-                out.write(frame)
-            else:
-                cv2.imshow('StrongSORT Tracking', frame)
-                if cv2.waitKey(1) & 0xFF ==ord("q"):
-                    break
-            
-            frame_id+=1
+        frame_id+=1
 
     cap.release()
     if output_path:
