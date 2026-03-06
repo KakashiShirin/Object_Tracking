@@ -1,1 +1,9 @@
 opencv-python
+ultralytics # yolo model
+scipy
+numpy
+filterpy
+boxmot
+torchreid
+torch
+torchvision
