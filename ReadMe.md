@@ -1,5 +1,3 @@
-Here’s a cleaner, more professional **README** that’s still easy to read and friendly 👇
-You can copy-paste this directly.
 
 ---
 
